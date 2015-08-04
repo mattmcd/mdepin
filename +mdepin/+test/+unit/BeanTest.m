@@ -16,9 +16,9 @@ classdef BeanTest < matlab.unittest.TestCase
             config = mdepin.StructConfig(struct('NumProp', testNum, ...
                 'CharProp', testChar, 'ArrayProp', testArray ));
             testObj = mdepin.test.mock.MockData( config );
-            assertEqual( testObj.NumProp, testNum );
-            assertEqual( testObj.CharProp, testChar);
-            assertEqual( testObj.ArrayProp, testArray );
+            testCase.assertEqual( testObj.NumProp, testNum );
+            testCase.assertEqual( testObj.CharProp, testChar);
+            testCase.assertEqual( testObj.ArrayProp, testArray );
         end
         
     end
