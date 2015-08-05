@@ -7,6 +7,9 @@ classdef MovieListerTest < matlab.unittest.TestCase
     %   director.  Dependency injection is used to inject different
     %   implementations of the finder class.
     
+    % Copyright Matt McDonnell, 2015
+    % See LICENSE file for license details
+    
     properties
         Lister
     end
@@ -15,15 +18,35 @@ classdef MovieListerTest < matlab.unittest.TestCase
         function listMoviesFromFile(testCase)
             testCase.createMovieListerFromFile();
             movies = testCase.getMoviesByAlice();
-            expectedMovies =  {'My First Movie', 'Movie the Second'};
+            expectedMovies =  {'My First Movie'; 'Movie The Second'};
             testCase.assertEqual(movies.Title, expectedMovies);
         end
         
         function listMoviesFromURL(testCase)
             testCase.createMovieListerFromURL();
             movies = testCase.getMoviesByAlice();
-            expectedMovies =  {'My First Movie', 'Movie the Second'};
+            expectedMovies =  {'My First Movie'; 'Movie The Second'};
             testCase.assertEqual(movies.Title, expectedMovies);
+        end
+    end
+    
+    methods         
+        
+        function createMovieListerFromFile(testCase)
+            fileLoc = fullfile( ...
+                fileparts(which('mdepin.demo.MovieLister')), ...
+                'Movies.csv');
+            ctx.Lister = struct('class', 'mdepin.demo.MovieLister', ...
+                'Finder', 'FileFinder');
+            ctx.FileFinder = struct(...
+                'class', 'mdepin.demo.FileMovieFinder', ...
+                'FileName', fileLoc);
+            testCase.Lister = mdepin.BeanFactory( ...
+                mdepin.StructContext(ctx)).getBean('Lister');
+        end
+        
+        function movies = getMoviesByAlice(testCase)
+            movies = testCase.Lister.getMoviesDirectedBy('Alice');
         end
     end
     
