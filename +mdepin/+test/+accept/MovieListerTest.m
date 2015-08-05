@@ -45,6 +45,17 @@ classdef MovieListerTest < matlab.unittest.TestCase
                 mdepin.StructContext(ctx)).getBean('Lister');
         end
         
+        function createMovieListerFromURL(testCase)
+            url =  'http://www.matt-mcdonnell.com/mdepin_demo_Movies.csv';
+            ctx.Lister = struct('class', 'mdepin.demo.MovieLister', ...
+                'Finder', 'FileFinder');
+            ctx.FileFinder = struct(...
+                'class', 'mdepin.demo.URLMovieFinder', ...
+                'URL', url);
+            testCase.Lister = mdepin.BeanFactory( ...
+                mdepin.StructContext(ctx)).getBean('Lister');
+        end
+        
         function movies = getMoviesByAlice(testCase)
             movies = testCase.Lister.getMoviesDirectedBy('Alice');
         end
