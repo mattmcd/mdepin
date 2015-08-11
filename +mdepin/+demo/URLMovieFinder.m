@@ -1,4 +1,4 @@
-classdef URLMovieFinder < mdepin.Bean & mdepin.demo.MovieFinder
+classdef URLMovieFinder < mdepin.demo.MovieFinder
     %URLMOVIEFINDER Find table of movies from URL
     
     % Copyright Matt McDonnell, 2015
@@ -10,7 +10,7 @@ classdef URLMovieFinder < mdepin.Bean & mdepin.demo.MovieFinder
     
     methods
         function obj = URLMovieFinder(config)
-            obj = obj@mdepin.Bean(config);
+            obj = obj@mdepin.demo.MovieFinder(config);
         end
         
         function movies = findAll(obj)
