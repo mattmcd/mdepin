@@ -46,6 +46,11 @@ classdef AbstractView < handle & mdepin.Bean
                 end
             end
         end
+        
+        function init(obj)
+            obj.constructGUI();
+            obj.initGUI();
+        end
     end
     
     methods (Abstract)

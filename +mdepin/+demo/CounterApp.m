@@ -24,8 +24,7 @@ classdef CounterApp < handle & mdepin.Bean
         end
         
         function init(obj)
-            obj.GUI.constructGUI();
-            obj.GUI.initGUI();
+            obj.GUI.init();
             % Delete application if GUI closed
             addlistener(ancestor(obj.GUI.ParentHandle, 'figure'), ...
                 'ObjectBeingDestroyed', @(s,e) delete(obj));
