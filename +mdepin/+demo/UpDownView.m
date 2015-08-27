@@ -11,13 +11,13 @@ classdef UpDownView < mdepin.demo.AbstractView
         
         function delete(obj)            
             if obj.IsFigure
-                delete(obj.GUIHandle.Parent);
+                delete(obj.ParentHandle);
             end
         end
         
-        function constructGUI(obj, parentHandle)
-            noParent = ~exist('parentHandle', 'var') || ...
-                isempty(parentHandle) || ~ishandle(parentHandle);
+        function constructGUI(obj)
+            parentHandle = obj.ParentHandle;
+            noParent = isempty(parentHandle) || ~ishandle(parentHandle);
             if noParent
                 parentHandle = figure(...
                     'Name', 'Up and Down', 'NumberTitle', 'off', ...
@@ -32,7 +32,7 @@ classdef UpDownView < mdepin.demo.AbstractView
             down = uicontrol('Parent', parentHandle, 'Style', 'pushbutton', ...
                 'Units', 'Normalized', ...
                 'Position', [0 0 1 0.5], 'String', 'Down', 'tag', 'Down');
-            obj.GUIHandle.Parent = parentHandle;
+            obj.ParentHandle = parentHandle;
             obj.GUIHandle.UpButton = up;
             obj.GUIHandle.DownButton = down;
         end

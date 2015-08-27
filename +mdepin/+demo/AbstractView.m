@@ -6,6 +6,7 @@ classdef AbstractView < handle & mdepin.Bean
     % See LICENSE file for license details
     
     properties
+        ParentHandle
         GUIHandle
         Command
         IsFigure = false
@@ -16,9 +17,12 @@ classdef AbstractView < handle & mdepin.Bean
             obj = obj@mdepin.Bean(config);
         end     
         
-        function call(obj, control)
+        function call(obj, control, evtData)
+            if ~exist('evtData', 'var')
+                evtData = [];
+            end
             cbFun = get(obj.GUIHandle.(control), 'Callback');
-            cbFun(obj.GUIHandle.(control), []);
+            cbFun(obj.GUIHandle.(control), evtData);
         end
         
         function setCallback(obj, control, command)
@@ -45,7 +49,7 @@ classdef AbstractView < handle & mdepin.Bean
     end
     
     methods (Abstract)
-        constructGUI(obj, parentHandle)
+        constructGUI(obj)
         initGUI(obj)
     end
     
