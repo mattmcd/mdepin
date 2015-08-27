@@ -28,6 +28,9 @@ classdef CounterApp < handle & mdepin.Bean
             % Delete application if GUI closed
             addlistener(ancestor(obj.GUI.ParentHandle, 'figure'), ...
                 'ObjectBeingDestroyed', @(s,e) delete(obj));
+            % Trigger GUI update
+            val = obj.Data.Value;
+            obj.Data.Value = val;
         end
     end
     
@@ -40,14 +43,13 @@ classdef CounterApp < handle & mdepin.Bean
             ctx.App.Data = 'Counter';
             ctx.Counter.class = 'mdepin.demo.Counter';
             ctx.View.class = 'mdepin.demo.UpDownView';                  
-            obj = mdepin.createApplication( ctx, 'App' );
+            ctx.View.Command.Up = 'Increment';
+            ctx.View.Command.Down = 'Decrement';
             % Insert commands
             ctx.Increment.class = 'mdepin.demo.IncrementCommand';
-            ctx.Increment.Data = obj.Data;
+            ctx.Increment.Data = 'Counter';
             ctx.Decrement.class = 'mdepin.demo.DecrementCommand';
-            ctx.Decrement.Data = obj.Data;   
-            obj.GUI.Command.Up = mdepin.createApplication(ctx, 'Increment');
-            obj.GUI.Command.Down = mdepin.createApplication(ctx, 'Decrement');
+            ctx.Decrement.Data = 'Counter';               
             % Create GUI
             f = figure('Name', 'Up Down Display', 'NumberTitle', 'off', ...
                 'MenuBar', 'none', 'Position', [100 200 400 300]);
@@ -56,13 +58,15 @@ classdef CounterApp < handle & mdepin.Bean
             dispPanel = uipanel( 'Parent', f, 'Units', 'Normalized', ...
                 'Position', [0.5 0 0.5 1]);
             dispH = uicontrol('Parent', dispPanel, 'style', 'text', ...
-                'Units', 'Normalized', 'Position', [0 0 1 1], ...
-                'FontSize', 18, 'String', num2str(obj.Data.Value));
+                'Units', 'Normalized', 'Position', [0 0.25 1 0.5], ...
+                'FontSize', 18);
             % Two panel GUI with control and display
-            obj.GUI.ParentHandle = controlPanel;
+            ctx.View.ParentHandle = controlPanel;
+            obj = mdepin.createApplication( ctx, 'App' );
             obj.init();
             addlistener( obj.Data, 'Value', 'PostSet', ...
                 @(s,e) set(dispH, 'String', num2str(e.AffectedObject.Value)));
+            obj.Data.Value = 0;
             if nargout>0
                 varargout{1} = obj;
             end

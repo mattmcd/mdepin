@@ -52,14 +52,13 @@ classdef GuiCommandTest < matlab.unittest.TestCase
         
         function createCommandDispGUI(testCase)
             ctx.App.class = 'mdepin.demo.UpDownView';                  
+            ctx.App.Command.Up = 'DisplayUp';
+            ctx.App.Command.Down =  'DisplayDown';
             ctx.DisplayUp.class = 'mdepin.demo.DisplayCommand';
             ctx.DisplayUp.DisplayName = 'Up';
             ctx.DisplayDown.class = 'mdepin.demo.DisplayCommand';
             ctx.DisplayDown.DisplayName = 'Down';   
             testCase.App = mdepin.createApplication( ctx, 'App' );
-            % Insert commands
-            testCase.App.Command.Up = mdepin.createApplication(ctx, 'DisplayUp');
-            testCase.App.Command.Down = mdepin.createApplication(ctx, 'DisplayDown');
         end
         
         function createCounterGUI(testCase)
@@ -68,14 +67,13 @@ classdef GuiCommandTest < matlab.unittest.TestCase
             ctx.App.Data = 'Counter';
             ctx.Counter.class = 'mdepin.demo.Counter';
             ctx.View.class = 'mdepin.demo.UpDownView';                  
-            testCase.App = mdepin.createApplication( ctx, 'App' );
-            % Insert commands
+            ctx.View.Command.Up = 'Increment';
+            ctx.View.Command.Down = 'Decrement';
             ctx.Increment.class = 'mdepin.demo.IncrementCommand';
-            ctx.Increment.Data = testCase.App.Data;
+            ctx.Increment.Data = 'Counter'; 
             ctx.Decrement.class = 'mdepin.demo.DecrementCommand';
-            ctx.Decrement.Data = testCase.App.Data;   
-            testCase.App.GUI.Command.Up = mdepin.createApplication(ctx, 'Increment');
-            testCase.App.GUI.Command.Down = mdepin.createApplication(ctx, 'Decrement');
+            ctx.Decrement.Data = 'Counter';              
+            testCase.App = mdepin.createApplication( ctx, 'App' );
         end
         
     end

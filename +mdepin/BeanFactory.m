@@ -33,7 +33,9 @@ classdef BeanFactory < handle
                 for iDep = 1:numel( depGraph(iBean).DepId )
                     dep = depGraph(iBean).DepId{iDep};
                     prop = depGraph(iBean).Param{iDep};
-                    params.(prop) = obj.Beans(dep);
+                    params = mdepin.util.structpathasgn(...
+                        params, prop, obj.Beans(dep));
+                    % params.(prop) = obj.Beans(dep);
                 end
                 config = mdepin.StructConfig( params );
                 obj.Beans(beanId) = ctor( config );

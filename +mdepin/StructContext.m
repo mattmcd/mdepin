@@ -67,21 +67,35 @@ classdef StructContext < mdepin.Context
             % Parameter is a dependency if it is a string matching a beanId
             % TODO:
             % or a cell array of strings matching a beanId
-            paramId = fieldnames(params);
             dep.Id = beanId;
-            dep.Param = cell(0,1);
-            dep.DepId = cell(0,1);
-            for iParam = 1:numel(paramId)
-                param = paramId{iParam};
-                value = params.(param);
-                isBeanId = ischar( value ) && ismember(value, allId);
-                % TODO: cell array of dependencies
-                % isBeanArray = iscellstr( value ) && all(ismember( value, allId));
-                if isBeanId
-                    dep.Param{end+1,:} = param;
-                    dep.DepId{end+1,:} = value;
-                end
+            
+            pathArray = mdepin.util.struct2path(params);
+            if ~isempty( pathArray )
+                valArray = cellfun(...
+                    @(c) {mdepin.util.structpathref(params,c)}, pathArray);
+                isBeanFun = @(value) ischar( value ) && ismember(value, allId);
+                beanInd = cellfun(isBeanFun, valArray);
+                dep.Param = pathArray(beanInd);
+                dep.DepId = valArray(beanInd);
+            else
+                dep.Param = cell(0,1);
+                dep.DepId = cell(0,1);
             end
+            
+%             paramId = fieldnames(params);            
+%             dep.Param = cell(0,1);
+%             dep.DepId = cell(0,1);
+%             for iParam = 1:numel(paramId)
+%                 param = paramId{iParam};
+%                 value = params.(param);
+%                 isBeanId = ischar( value ) && ismember(value, allId);
+%                 % TODO: cell array of dependencies
+%                 % isBeanArray = iscellstr( value ) && all(ismember( value, allId));
+%                 if isBeanId
+%                     dep.Param{end+1,:} = param;
+%                     dep.DepId{end+1,:} = value;
+%                 end
+%             end
         end
     end
     

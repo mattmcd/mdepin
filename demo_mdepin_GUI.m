@@ -17,14 +17,16 @@
 % We first define the application context as a struct of components:
 
 ctx.App.class = 'mdepin.demo.UpDownView';
+ctx.App.Command.Up = 'DisplayUp';
+ctx.App.Command.Down =  'DisplayDown';
+% Define commands
 ctx.DisplayUp.class = 'mdepin.demo.DisplayCommand';
 ctx.DisplayUp.DisplayName = 'Up';
 ctx.DisplayDown.class = 'mdepin.demo.DisplayCommand';
 ctx.DisplayDown.DisplayName = 'Down';
+
+% Create the application object
 displayApp = mdepin.createApplication( ctx, 'App' );
-% Insert commands
-displayApp.Command.Up = mdepin.createApplication(ctx, 'DisplayUp');
-displayApp.Command.Down = mdepin.createApplication(ctx, 'DisplayDown');
 % Create the GUI and wire up callbacks
 displayApp.init();
 clear('ctx'); % To avoid any confusion in next part of script
@@ -35,15 +37,14 @@ ctx.App.GUI = 'View';
 ctx.App.Data = 'Counter';
 ctx.Counter.class = 'mdepin.demo.Counter';
 ctx.View.class = 'mdepin.demo.UpDownView';
-obj = mdepin.createApplication( ctx, 'App' );
-% Insert commands - these now affect a data object
+ctx.View.Command.Up = 'Increment';
+ctx.View.Command.Down = 'Decrement';
+% Define commands
 ctx.Increment.class = 'mdepin.demo.IncrementCommand';
-ctx.Increment.Data = obj.Data;
+ctx.Increment.Data = 'Counter';
 ctx.Decrement.class = 'mdepin.demo.DecrementCommand';
-ctx.Decrement.Data = obj.Data;
-obj.GUI.Command.Up = mdepin.createApplication(ctx, 'Increment');
-obj.GUI.Command.Down = mdepin.createApplication(ctx, 'Decrement');
-% Extend GUI by adding display text
+ctx.Decrement.Data = 'Counter';
+% Create GUI
 f = figure('Name', 'Up Down Display', 'NumberTitle', 'off', ...
     'MenuBar', 'none', 'Position', [100 200 400 300]);
 controlPanel = uipanel( 'Parent', f, 'Units', 'Normalized', ...
@@ -51,13 +52,19 @@ controlPanel = uipanel( 'Parent', f, 'Units', 'Normalized', ...
 dispPanel = uipanel( 'Parent', f, 'Units', 'Normalized', ...
     'Position', [0.5 0 0.5 1]);
 dispH = uicontrol('Parent', dispPanel, 'style', 'text', ...
-    'Units', 'Normalized', 'Position', [0 0.2 1 0.6], ...
-    'FontSize', 18, 'String', num2str(obj.Data.Value));
+    'Units', 'Normalized', 'Position', [0 0.25 1 0.5], ...
+    'FontSize', 18);
 % Two panel GUI with control and display
-obj.GUI.ParentHandle = controlPanel;
-obj.init();
+ctx.View.ParentHandle = controlPanel;
+
+% Create the application object
+obj = mdepin.createApplication( ctx, 'App' );
+% Initialize the GUI
 addlistener( obj.Data, 'Value', 'PostSet', ...
     @(s,e) set(dispH, 'String', num2str(e.AffectedObject.Value)));
+obj.init();
+
+clear('ctx'); % To avoid any confusion on rerunning script
 
 %%
 % Copyright Matt McDonnell, 2015
