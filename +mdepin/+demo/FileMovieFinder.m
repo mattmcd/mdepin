@@ -1,4 +1,4 @@
-classdef FileMovieFinder < mdepin.Bean & mdepin.demo.MovieFinder
+classdef FileMovieFinder < mdepin.demo.MovieFinder
     %FILEMOVIEFINDER Find table of movies from file
     
     % Copyright Matt McDonnell, 2015
@@ -10,7 +10,7 @@ classdef FileMovieFinder < mdepin.Bean & mdepin.demo.MovieFinder
     
     methods
         function obj = FileMovieFinder(config)
-            obj = obj@mdepin.Bean(config);
+            obj = obj@mdepin.demo.MovieFinder(config);
         end
         
         function movies = findAll(obj)
