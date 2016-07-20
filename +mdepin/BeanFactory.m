@@ -39,7 +39,8 @@ classdef BeanFactory < handle
                 end
                 config = mdepin.StructConfig( params );
                 obj.Beans(beanId) = ctor( config );
-            end                                    
+            end
+            obj.IsInitialized = true;
         end
         
         function bean = getBean(obj, beanId)
